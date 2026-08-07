@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-group = "org.koitharu"
+group = "org.dantassz"
 version = "1.0"
 
 tasks.test {
@@ -24,7 +24,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
             "-opt-in=kotlin.RequiresOptIn",
             "-opt-in=kotlin.contracts.ExperimentalContracts",
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=org.koitharu.kotatsu.parsers.InternalParsersApi",
+            "-opt-in=org.dantassz.yukitsu.parsers.InternalParsersApi",
         )
     }
 }
@@ -50,8 +50,7 @@ dependencies {
     implementation(libs.json)
     implementation(libs.androidx.collection)
     api(libs.jsoup)
-
-    ksp(project(":kotatsu-parsers-ksp"))
+    "ksp"(project(":yukitsu-parsers-ksp"))
 
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.engine)

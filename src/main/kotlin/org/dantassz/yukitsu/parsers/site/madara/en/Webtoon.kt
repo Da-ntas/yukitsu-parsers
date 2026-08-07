@@ -1,0 +1,15 @@
+package org.dantassz.yukitsu.parsers.site.madara.en
+
+import org.dantassz.yukitsu.parsers.Broken
+import org.dantassz.yukitsu.parsers.MangaLoaderContext
+import org.dantassz.yukitsu.parsers.MangaSourceParser
+import org.dantassz.yukitsu.parsers.model.MangaParserSource
+import org.dantassz.yukitsu.parsers.site.madara.MadaraParser
+
+@Broken
+@MangaSourceParser("WEBTOON", "Webtoon.uk", "en")
+internal class Webtoon(context: MangaLoaderContext) :
+	MadaraParser(context, MangaParserSource.WEBTOON, "webtoon.uk", 20) {
+	override val tagPrefix = "manhwa-genre/"
+	override val postReq = true
+}
