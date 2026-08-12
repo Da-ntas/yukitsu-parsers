@@ -74,4 +74,6 @@ internal class MangaParserWrapper(
 
 		override fun request(): Request = request
 	}
+
+    internal fun unwrap(): MangaParser = delegate
 }
