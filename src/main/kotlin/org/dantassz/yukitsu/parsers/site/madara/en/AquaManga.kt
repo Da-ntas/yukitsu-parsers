@@ -13,11 +13,6 @@ internal class AquaManga(context: MangaLoaderContext) :
     override val listUrl = "/manga"
     override val withoutAjax = true
 
-    init {
-        paginator.firstPage = 1
-        searchPaginator.firstPage = 1
-    }
-
     override suspend fun getListPage(page: Int, order: SortOrder, filter: MangaListFilter): List<Manga> {
         val pages = page + 1
 
