@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "org.dantassz"
-version = "1.0"
+version = System.getenv("RELEASE_VERSION") ?: "1.0-SNAPSHOT"
 
 tasks.test {
     useJUnitPlatform()
