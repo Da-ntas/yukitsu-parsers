@@ -1,24 +1,24 @@
 name: Auto Release to JitPack
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**.md'
-      - '.github/**'
-  workflow_dispatch:
+    workflow_run:
+        workflows: ["Check & Test latest parsers"]
+        types:
+            - completed
 
 permissions:
   contents: write
 
 jobs:
   release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository 🌏
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
 
       - name: Set up JDK 17 🔧
@@ -47,13 +47,18 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag ${{ steps.vars.outputs.tag }}
           git push origin ${{ steps.vars.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Notify JitPack ☁️
+      - name: Trigger JitPack Build ☁️
         run: |
-          # Converte o repositório para o formato do JitPack (com.github.user.repo)
-          REPO_PATH=$(echo "${{ github.repository }}" | sed 's/\//\./')
-          # Ping para iniciar o build no JitPack
-          curl -s -I "https://jitpack.io/api/builds/com.github.${{ github.repository }}/${{ steps.vars.outputs.tag }}" > /dev/null
-          echo "Release ${{ steps.vars.outputs.tag }} enviada para o JitPack!"
+            VERSION="${{ steps.vars.outputs.tag }}"
+            REPOSITORY="${{ github.repository }}"
+
+            echo "Triggering JitPack build..."
+            echo "Repository: $REPOSITORY"
+            echo "Version: $VERSION"
+
+            curl --fail --show-error --silent \
+              -X POST \
+              "https://jitpack.io/api/builds/com.github.${REPOSITORY}/${VERSION}"
+
+            echo "JitPack build triggered successfully!"
