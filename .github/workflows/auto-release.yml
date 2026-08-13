@@ -48,18 +48,3 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "${{ steps.vars.outputs.tag }}"
           git push origin "${{ steps.vars.outputs.tag }}"
-
-      - name: Trigger JitPack Build ☁️
-        run: |
-            VERSION="${{ steps.vars.outputs.tag }}"
-            REPOSITORY="${{ github.repository }}"
-
-            echo "Triggering JitPack build..."
-            echo "Repository: $REPOSITORY"
-            echo "Version: $VERSION"
-
-            curl --fail --show-error --silent \
-              -X POST \
-              "https://jitpack.io/api/builds/com.github.${REPOSITORY}/${VERSION}"
-
-            echo "JitPack build triggered successfully!"
