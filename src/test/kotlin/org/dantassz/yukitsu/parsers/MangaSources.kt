@@ -4,5 +4,5 @@ import org.junit.jupiter.params.provider.EnumSource
 import org.dantassz.yukitsu.parsers.model.MangaParserSource
 
 // Change 'names' to test specified parsers
-@EnumSource(MangaParserSource::class, names = ["AQUAMANGA"], mode = EnumSource.Mode.INCLUDE)
+@EnumSource(MangaParserSource::class, names = ["TOPMANHUA"], mode = EnumSource.Mode.INCLUDE)
 internal annotation class MangaSources

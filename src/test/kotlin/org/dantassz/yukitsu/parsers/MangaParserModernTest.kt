@@ -72,15 +72,15 @@ internal class MangaParserModernTest {
         }
 
 		val defaultOrder = (parser as? AbstractMangaParser)?.defaultSortOrder ?: parser.availableSortOrders.first()
-		val page0 = delegate.getListPage(0, defaultOrder, MangaListFilter.EMPTY)
-		val page1 = delegate.getListPage(1, defaultOrder, MangaListFilter.EMPTY)
+		val page0 = delegate.getListPage(1, defaultOrder, MangaListFilter.EMPTY)
+		val page1 = delegate.getListPage(2, defaultOrder, MangaListFilter.EMPTY)
 
-		assert(page0.isNotEmpty()) { "Page 0 is empty" }
-		assert(page1.isNotEmpty()) { "Page 1 is empty" }
-		assert(page0 != page1) { "Page 0 and Page 1 are equal" }
+		assert(page0.isNotEmpty()) { "Page 1 is empty" }
+		assert(page1.isNotEmpty()) { "Page 2 is empty" }
+		assert(page0 != page1) { "Page 1 and Page 2 are equal" }
 		val intersection = page0.intersect(page1.toSet())
 		assert(intersection.isEmpty()) {
-			"Pages 0 and 1 are intersected by " + intersection.size
+			"Pages 1 and 2 are intersected by " + intersection.size
 		}
 		assert(page0.all { it.source == source })
 	}
