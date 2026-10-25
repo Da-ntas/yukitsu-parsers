@@ -62,7 +62,7 @@ jobs:
               --url "https://api.github.com/repos/Da-ntas/Kotatsu/dispatches" \
               --header "Accept: application/vnd.github+json" \
               --header "Authorization: Bearer $GH_TOKEN" \
-              --header "X-GitHub-Api-Version: 2022-11-28" \
+              --header "X-GitHub-Api-Version: 2026-03-10" \
               --data "$(jq -n \
                 --arg version "$PARSERS_VERSION" \
                 '{

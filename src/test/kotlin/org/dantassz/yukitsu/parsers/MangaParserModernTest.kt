@@ -181,7 +181,7 @@ internal class MangaParserModernTest {
 		val defaultOrder = (parser as? AbstractMangaParser)?.defaultSortOrder ?: parser.availableSortOrders.first()
 		val list = parser.getList(0, defaultOrder, MangaListFilter.EMPTY)
 
-		val manga = list.random()
+        val manga = list.random()
 		parser.getDetails(manga).apply {
 			assert(!chapters.isNullOrEmpty()) { "Chapters are null or empty" }
 			assert(publicUrl.isUrlAbsolute()) { "Manga public url is not absolute: '$publicUrl'" }

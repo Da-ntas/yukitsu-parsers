@@ -31,6 +31,7 @@ import org.dantassz.yukitsu.parsers.util.src
 import org.dantassz.yukitsu.parsers.util.toAbsoluteUrl
 import org.dantassz.yukitsu.parsers.util.toTitleCase
 import org.dantassz.yukitsu.parsers.util.urlEncoded
+import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.time.Instant
@@ -128,23 +129,35 @@ internal class TopManhua(context: MangaLoaderContext) :
         }
     }
 
-    override suspend fun getChapters(manga: Manga, doc: Document):List<MangaChapter> {
-        // url example in f12
-        // https://manhuatop.org/api/reader?resource=chapters&path=%2Fmanhua%2Finvincible-recommended%2F%3Ftab%3Dchapters
-        val url = manga.url
-        val path = "$url?tab=chapters".urlEncoded()
+    private suspend fun getRecursiveChaptersData(mangaUrl: String, page: Int = 1, chapters: MutableList<JSONObject> = mutableListOf()): List<JSONObject> {
+        val path = "$mangaUrl?tab=chapters&chapter_page=$page".urlEncoded()
+
         val chapterUrl = buildString {
             append("https://")
             append(domain)
             append("/api/reader?resource=chapters&path=")
             append(path)
         }
+
         val response = webClient.httpGet(chapterUrl).parseJson()
-        val items = response.optJSONArray("items") ?: return emptyList()
+        val items = response.optJSONArray("items") ?: return chapters
 
-        return (0 until items.length()).mapNotNull { i ->
-            val item = items.optJSONObject(i) ?: return@mapNotNull null
+        for (i in 0 until items.length()) {
+            val item = items.optJSONObject(i) ?: continue
+            chapters.add(item)
+        }
 
+        return if (response.optBoolean("hasMore", false)) {
+            getRecursiveChaptersData(mangaUrl, page + 1, chapters)
+        } else {
+            chapters
+        }
+    }
+
+    override suspend fun getChapters(manga: Manga, doc: Document): List<MangaChapter> {
+        val items = getRecursiveChaptersData(manga.url)
+
+        return items.mapIndexed { i, item ->
             val title = item.optString("title")
             val href = item.optString("path")
             val date = item.optString("date")
