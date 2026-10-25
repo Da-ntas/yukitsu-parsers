@@ -181,7 +181,7 @@ internal class TopManhua(context: MangaLoaderContext) :
                     Instant.parse(date).toEpochMilli()
                 }.getOrDefault(0L),
             )
-        }
+        }.reversed()
     }
 
     override suspend fun getDetails(manga: Manga): Manga {
