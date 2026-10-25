@@ -48,3 +48,24 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "${{ steps.vars.outputs.tag }}"
           git push origin "${{ steps.vars.outputs.tag }}"
+
+      - name: Trigger Yukitsu APK release
+        env:
+            GH_TOKEN: ${{ secrets.YUKITSU_DISPATCH_TOKEN }}
+            PARSERS_VERSION: ${{ steps.vars.outputs.version }}
+        shell: bash
+        run: |
+            set -euo pipefail
+
+            curl --fail-with-body --silent --show-error \
+              --request POST \
+              --url "https://api.github.com/repos/Da-ntas/Kotatsu/dispatches" \
+              --header "Accept: application/vnd.github+json" \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              --data "$(jq -n \
+                --arg version "$PARSERS_VERSION" \
+                '{
+                  event_type: "parsers_release",
+                  client_payload: { version: $version }
+                }')"

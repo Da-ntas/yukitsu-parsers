@@ -131,7 +131,8 @@ internal class TopManhua(context: MangaLoaderContext) :
     override suspend fun getChapters(manga: Manga, doc: Document):List<MangaChapter> {
         // url example in f12
         // https://manhuatop.org/api/reader?resource=chapters&path=%2Fmanhua%2Finvincible-recommended%2F%3Ftab%3Dchapters
-        val path = "$manga.url?tab=chapters".urlEncoded()
+        val url = manga.url
+        val path = "$url?tab=chapters".urlEncoded()
         val chapterUrl = buildString {
             append("https://")
             append(domain)
